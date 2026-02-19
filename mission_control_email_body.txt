@@ -1,0 +1,20 @@
+Hey Alex,
+
+Here’s the Mission Control game plan I put together after digging through Alex Finn’s article and the current best community builds:
+
+1. **Stack**: Next.js 15 (App Router) + Convex + Tailwind/shadcn + Framer Motion. Convex gives us real-time sync, auth, and serverless functions, while Next’s App Router lets us expose secure API routes that talk to the OpenClaw workspace.
+2. **OpenClaw integration**: Use an internal hook so every agent run posts lifecycle events to Convex. That keeps the task board, team view, and activity feed live without polling.
+3. **Component plan**:
+   - *Tasks board*: Kanban sourced from Convex. OpenClaw runs create/update tasks automatically; Alex can add human tasks too.
+   - *Content pipeline*: Convex table for ideas→scripts→thumbnail→filming. Add quick idea capture + attachment support.
+   - *Calendar*: Merge Convex `scheduled_jobs` with `gog` calendar events so cron jobs + real events show in one timeline.
+   - *Memory screen*: Nightly script ingests `memory/*.md` into Convex, surfaced with global search + filters.
+   - *Team*: Catalog Scottie + recurring sub-agents (researcher, writer, designer) with roles and live status pulled from hook events.
+   - *Office*: Pure UI layer powered by task/agent status; avatars animate via Framer Motion and show current task/log snippet on hover.
+4. **Implementation steps**: bootstrap the repo, define Convex schema for tasks/content/scheduled jobs/memories/agents/activity logs, build webhook endpoint, add UI shells per tab, wire real-time queries, integrate gog for Gmail/Calendar context, then deploy (Convex + Vercel) with email allowlist auth.
+5. **References**: manish-raana/openclaw-mission-control (Convex webhook pattern), abhi1693/openclaw-mission-control (Next.js dashboard layout), Jason Zhu’s Mission Control prompt (two-source data model: Convex + filesystem API routes).
+6. **Risks/Mitigations**: add retry logging for webhook failures, reconcile tasks by parsing OpenClaw memory files nightly, keep Mission Control private via Convex Auth, document schema + automation scripts so changes stay maintainable.
+
+Let me know if you want wireframes or if I should start scaffolding the repo right after you review.
+
+- Scottie
